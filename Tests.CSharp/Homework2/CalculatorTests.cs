@@ -1,41 +1,59 @@
 using Hw2;
-using Tests.RunLogic.Attributes;
+using Xunit;
 
-namespace Tests.CSharp.Homework2;
-
-public class CalculatorTests
+namespace Hw2Tests
 {
-    [HomeworkTheory(Homeworks.HomeWork2)]
-    [InlineData(15, 5, CalculatorOperation.Plus, 20)]
-    [InlineData(15, 5, CalculatorOperation.Minus, 10)]
-    [InlineData(15, 5, CalculatorOperation.Multiply, 75)]
-    [InlineData(15, 5, CalculatorOperation.Divide, 3)]
-    public void TestAllOperations(int value1, int value2, CalculatorOperation operation, int expectedValue)
+    public class CalculatorTests
     {
-        throw new NotImplementedException();
-    }
+        [Theory]
+        [InlineData(15, 5, CalculatorOperation.Plus, 20)]
+        [InlineData(15, 5, CalculatorOperation.Minus, 10)]
+        [InlineData(15, 5, CalculatorOperation.Multiply, 75)]
+        [InlineData(15, 5, CalculatorOperation.Divide, 3)]
+        public void TestAllOperations(int value1, int value2, CalculatorOperation operation, int expectedValue)
+        {
+            //act
+            var actual = Calculator.Calculate(value1, operation, value2);
 
-    [Homework(Homeworks.HomeWork2)]
-    public void TestInvalidOperation()
-    {
-        throw new NotImplementedException();
-    }
+            //assert
+            Assert.Equal(expectedValue, actual);
+        }
+        
+        [Fact]
+        public void TestInvalidOperation()
+        {
+            //assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => Calculator.Calculate(0, CalculatorOperation.Undefined, 10));
+        }
 
-    [Homework(Homeworks.HomeWork2)]
-    public void TestDividingNonZeroByZero()
-    {
-        throw new NotImplementedException();
-    }
+        [Fact]
+        public void TestDividingNonZeroByZero()
+        {
+            //act
+            var actual = Calculator.Calculate(0, CalculatorOperation.Divide, 10);
 
-    [Homework(Homeworks.HomeWork2)]
-    public void TestDividingZeroByNonZero()
-    {
-        throw new NotImplementedException();
-    }
+            //assert
+            Assert.Equal(0, actual);
+        }
 
-    [Homework(Homeworks.HomeWork2)]
-    public void TestDividingZeroByZero()
-    {
-        throw new NotImplementedException();
+        [Fact]
+        public void TestDividingZeroByNonZero()
+        {
+            //act
+            var actual = Calculator.Calculate(10, CalculatorOperation.Divide, 0);
+
+            //assert
+            Assert.Equal(double.PositiveInfinity, actual);
+        }
+        
+        [Fact]
+        public void TestDividingZeroByZero()
+        {
+            //act
+            var actual = Calculator.Calculate(0, CalculatorOperation.Divide, 0);
+
+            //assert
+            Assert.Equal(double.NaN, actual);
+        }
     }
 }
